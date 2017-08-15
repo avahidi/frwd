@@ -12,19 +12,15 @@ Usage::
     ./frwd :8080 127.0.0.1:80
 
 
+Why?
+----
 
+To give you access to ports that would otherwise be hidden or require
+some work to access.
 
-Why
----
-
-Frwd can give you access to ports that would otherwise be hidden or require
-significant work to access.
-
-For example, unlike Docker LXD does not have an EXPOSE command.
-So to expose ports you would need to set iptables rules.
-Frwd can achieve similar results without needing root access or requiring you to
-remember that odd iptables syntax.
-
+I wrote this when moving containers from Docker to LXD and noticing that
+LXD was missing an EXPOSE command. The alternative to using frwd would
+have been be a cryptic iptables command that would require root access.
 
 
 Why not?
