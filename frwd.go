@@ -13,7 +13,7 @@ type connectionData struct {
 }
 
 func usage() {
-	log.Fatal("frwd [listener-ip]:<listener-port> [target-ip]:<target-port>\n")
+	log.Fatal("frwd [local-ip]:<local-port> [target-ip]:<target-port>\n")
 }
 
 func copy(i net.Conn, o net.Conn, ev chan connectionData) {
@@ -55,7 +55,7 @@ func main() {
 
 	in, err := net.Listen("tcp", inadr)
 	if err != nil {
-		log.Fatal("Could not open incoming port: %v\n", err)
+		log.Fatalf("Could not open incoming port: %v\n", err)
 	}
 
 	for {

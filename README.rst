@@ -1,37 +1,28 @@
-
 FRWD
 ====
 
-A tiny port-forwarder written in golang.
+A tiny port-forwarder written in Go.
 
 
 Usage::
 
-    # build and forward from high-http to http on local machine
     go build
-    ./frwd :8080 127.0.0.1:80
+    ./frwd :8080 127.0.0.1:80     # i.e. 0.0.0.0:8080 <--> 127.0.0.1:80
 
 
 Why?
 ----
 
-To give you access to ports that would otherwise be hidden or require
-some work to access.
+To give you access to ports that would otherwise be hidden or
+require some work to access.
 
-I wrote this when moving containers from Docker to LXD and noticing that
-LXD was missing an EXPOSE command. The alternative to using frwd would
+I wrote this to emulate EXPOSE command of Docker in LXD. The alternative would
 have been be a cryptic iptables command that would require root access.
-
 
 Why not?
 --------
 
-As it is with most things in networking, you can already do it with netcat::
-
-    netcat -L 127.0.0.1:80 -p 8080
-
-:(
-
+As it is with most things in networking, you can probably already do it with netcat :(
 
 License
 -------
