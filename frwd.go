@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"os"
 	"log"
 	"net"
 )
@@ -13,20 +14,24 @@ type connectionData struct {
 	n   int64
 }
 
+var version_ = []int{ 0, 1, 0}
 var udp = flag.Bool("u", false, "forward UDP")
 var verbose = flag.Bool("v", false, "verbose")
 
 func usage() {
-	log.Fatal("frwd [local-ip]:<local-port> [target-ip]:<target-port>\n")
+	fmt.Fprintf(os.Stderr,"frwd version %d.%d.%d\n", version_[0], version_[1], version_[2] )
+	fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] [local-ip]:<local-port> [target-ip]:<target-port>\n", os.Args[0])
+	flag.PrintDefaults()
+	os.Exit(3)
 }
 
 func info(format string, a ...interface{}) {
 	if *verbose {
-		fmt.Printf("INFO "+format, a...)
+		log.Printf("INFO "+format, a...)
 	}
 }
 func fail(format string, a ...interface{}) {
-	fmt.Printf("ERROR "+format, a...)
+	log.Printf("ERROR "+format, a...)
 }
 
 func copy(i net.Conn, o net.Conn, ev chan connectionData) {
@@ -111,13 +116,12 @@ func udpServe(inadrstr, outadrstr string) error {
 }
 
 func main() {
+	var err error
 	if flag.Parse(); flag.NArg() != 2 {
 		usage()
 	}
 
 	inadr, outadr := flag.Arg(0), flag.Arg(1)
-	var err error
-
 	if *udp {
 		err = udpServe(inadr, outadr)
 	} else {
