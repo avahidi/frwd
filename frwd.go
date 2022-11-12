@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"os"
 	"log"
 	"net"
+	"os"
 	"regexp"
 )
 
@@ -15,15 +15,15 @@ type connectionData struct {
 	n   int64
 }
 
-var version_ = []int{ 0, 1, 0}
+var version_ = []int{0, 1, 1}
 var udp = flag.Bool("u", false, "forward UDP")
 var verbose = flag.Bool("v", false, "verbose")
 var filter = flag.String("filter", "", "Regex connection filter (TCP only)")
 
-var refilter  *regexp.Regexp = nil
+var refilter *regexp.Regexp = nil
 
 func usage() {
-	fmt.Fprintf(os.Stderr,"frwd version %d.%d.%d\n", version_[0], version_[1], version_[2] )
+	fmt.Fprintf(os.Stderr, "frwd version %d.%d.%d\n", version_[0], version_[1], version_[2])
 	fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] [local-ip]:<local-port> [target-ip]:<target-port>\n", os.Args[0])
 	flag.PrintDefaults()
 	os.Exit(3)
@@ -45,15 +45,14 @@ func copy(i net.Conn, o net.Conn, ev chan connectionData) {
 
 func tcpForward(inc net.Conn, outadr string) {
 	remote := inc.RemoteAddr()
-	info("TCP connection from %v...\n", remote)
 
 	if refilter != nil && !refilter.MatchString(remote.String()) {
 		info("Rejecting TCP connection from %v...\n", remote)
+		inc.Close()
 		return
 	} else {
 		info("TCP connection from %v...\n", remote)
 	}
-
 
 	inadr := inc.LocalAddr().String()
 	outc, err := net.Dial("tcp", outadr)
